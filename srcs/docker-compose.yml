@@ -1,0 +1,68 @@
+version: '3'
+# docker-compose definit les services-volumes-networks
+
+# docker volume ls
+volumes:
+  mariadb-volume:
+  wordpress-volume:
+
+# docker network ls
+networks:
+  inception-network:
+
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+    image: nginx
+    volumes:
+      - wordpress-volume:/var/www/wordpress
+    networks:
+      - inception-network
+    ports:
+      - "444:444"
+    restart: unless-stopped
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+    image: mariadb
+    volumes:
+      - mariadb-volume:/var/lib/mysql
+    networks:
+      - inception-network
+    environment:
+      - MARIADB_ROOT_PWD=${MARIADB_ROOT_PWD}
+      - MARIADB_DB=${MARIADB_DB}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PWD=${MARIADB_PWD}
+    restart: unless-stopped
+
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    build:
+      context: ./requirements/wordpress
+    image: wordpress
+    volumes:
+      - wordpress-volume:/var/www/wordpress
+    networks:
+      - inception-network
+    environment:
+      - WP_URL=${WP_URL}
+      - WP_DATABASE=${WP_DATABASE}
+      - WP_TITLE=${WP_TITLE}
+      - WP_ADMIN_USER=${WP_ADMIN_USER}
+      - WP_ADMIN_PWD=${WP_ADMIN_PWD}
+      - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+      - WP_USER=${WP_USER}
+      - WP_USER_PWD=${WP_USER_PWD}
+      - WP_USER_EMAIL=${WP_USER_EMAIL}
+      - MARIADB_HOST=${MARIADB_HOST}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PWD=${MARIADB_PWD}
+      - MARIADB_DB=${MARIADB_DB}
+    restart: unless-stopped

@@ -1,11 +1,31 @@
-FROM debian:buster
-RUN apt update -y
-RUN apt upgrade -y
-RUN apt-get -y install wget
-RUN apt-get install -y php7.3\
-    php-fpm\
-    php-mysql\
-    mariadb-client
-RUN wget https://fr.wordpress.org/wordpress-6.3-fr_FR.tar.gz -P /var/www
-RUN cd /var/www && tar -xzf wordpress-6.3-fr_FR.tar.gz && rm wordpress-6.3-fr_FR.tar.gz
-RUN chown -R root:root /var/www/wordpress
+FROM    	alpine:3.14
+
+RUN			apk update && apk upgrade --no-cache
+
+RUN			apk add --no-cache --quiet --update php7 \
+												php-phar \
+												php-json \
+												php-curl \
+												php-fpm \
+												php-mysqli \
+												php-iconv
+
+RUN     	apk add wget tar --no-cache
+
+RUN     	wget -P /var/www/ https://wordpress.org/latest.tar.gz
+
+RUN 		cd /var/www && tar -xzf latest.tar.gz && rm latest.tar.gz
+
+WORKDIR		/var/www/wordpress
+
+RUN			wget -P /usr/bin https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+RUN 		chmod +x /usr/bin/wp-cli.phar
+
+COPY    	conf/wp-config /config/wp-config
+
+COPY    	./tools/entrypoint.sh /tmp/entrypoint.sh
+
+RUN    		chmod +x /tmp/entrypoint.sh
+
+ENTRYPOINT	["sh", "/tmp/entrypoint.sh"]

@@ -14,7 +14,7 @@ if [ ! -f "wp-config.php" ]; then
 
 	# laisser un temps d attente sinon les etapes suivantes seront skippees
 	# La connexion a la base de donnees se fait dans ce temps
-	sleep 5
+	sleep 15
 
 	# Configuration du site wordpress
 	#wp commande wordpress
@@ -30,7 +30,7 @@ if [ ! -f "wp-config.php" ]; then
 	wp-cli.phar user create $WP_USER $WP_USER_EMAIL --role=editor --user_pass=$WP_USER_PWD
 
 	# Creation d'un article pour l'example (change number)
-	wp-cli.phar post generate --count=2 --post_title="Jonas's post"
+	wp-cli.phar post generate --count=2 --post_title="Jonas's Inception Post"
 fi
 
 # faire tourner wordpress mais aussi pour que le container keep running

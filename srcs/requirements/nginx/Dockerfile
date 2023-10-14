@@ -22,7 +22,7 @@ RUN     mkdir -p /var/run/nginx
 COPY    conf/nginx.conf /etc/nginx/http.d/default.conf
 
 # Exposition du seul port autorise par le sujet
-EXPOSE  444
+EXPOSE  443
 
 # Lancement de nginx en premier plan et non en background (les logs seront dans /var/log/nginx)
 # pour que le container ne se stop pas

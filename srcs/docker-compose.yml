@@ -21,7 +21,7 @@ services:
     networks:
       - inception-network
     ports:
-      - "444:444"
+      - "443:443"
     restart: unless-stopped
 
   mariadb:

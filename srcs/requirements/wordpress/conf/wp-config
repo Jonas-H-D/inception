@@ -16,9 +16,6 @@ define( 'DB_COLLATE', '' );
 
 $table_prefix = 'wp_';
 
-//permet fonctionnalites de debug
-define( 'WP_DEBUG', false);
-
 if ( ! defined( 'ABSPATH' ) ) {
         define( 'ABSPATH', __DIR__ . '/' );
 }

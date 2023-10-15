@@ -1,12 +1,19 @@
 version: '3'
-# docker-compose definit les services-volumes-networks
 
-# docker volume ls
 volumes:
   mariadb-volume:
+    driver: local
+    driver_opts:
+      device: /home/jhermon-/data/database
+      type: volume
+      o: bind
   wordpress-volume:
+    driver: local
+    driver_opts:
+      device: /home/jhermon-/data/wordpress
+      type: volume
+      o: bind
 
-# docker network ls
 networks:
   inception-network:
 

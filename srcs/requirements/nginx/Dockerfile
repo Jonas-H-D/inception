@@ -9,7 +9,7 @@ RUN     apk add --no-cache --quiet --update openssl
 # Creation du dossier qui va recueillir le certificat et la cle (pour HTTPS)
 RUN     mkdir -p /etc/nginx/ssl
 
-# Generation des certificats et cles au nom du student
+# Generation des certificats et cles
 RUN     openssl req -x509 -nodes \
         -out /etc/nginx/ssl/inception.crt \
         -keyout /etc/nginx/ssl/inception.key \

@@ -1,23 +1,31 @@
-FROM	alpine:3.14
+FROM    	alpine:3.14
 
-RUN		apk update --quiet && apk add --quiet --no-cache --update curl bash && \
-		apk add --quiet --no-cache --update mariadb-client && \
-		apk add --quiet --no-cache --update php7 php-phar \
-		php-json php-curl php-fpm php-mysqli php-iconv
+RUN			apk update && apk upgrade --no-cache
 
-RUN		mkdir -p /var/www/wordpress
+RUN			apk add --no-cache --quiet --update php7 \
+                php-phar \
+                php-json \
+                php-curl \
+                php-fpm \
+                php-mysqli \
+                php-iconv
 
-RUN		curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-		--output /usr/bin/wp
-RUN		chmod +x ./usr/bin/wp
+RUN     	apk add wget tar --no-cache
 
-RUN		wp core download --path=/var/www/wordpress
+RUN     	wget -P /var/www/ https://wordpress.org/latest.tar.gz
 
-WORKDIR /var/www/wordpress
+RUN 		cd /var/www && tar -xzf latest.tar.gz && rm latest.tar.gz
 
-COPY	conf/wp-config /config/wp-config
-COPY	./tools/entrypoint.sh /tmp/entrypoint.sh
+WORKDIR		/var/www/wordpress
 
-RUN		chmod +x /tmp/entrypoint.sh
+RUN			wget -P /usr/bin https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
-ENTRYPOINT ["sh", "/tmp/entrypoint.sh"]
+RUN 		chmod +x /usr/bin/wp-cli.phar
+
+COPY    	conf/wp-config /config/wp-config
+
+COPY    	./tools/entrypoint.sh /tmp/entrypoint.sh
+
+RUN    		chmod +x /tmp/entrypoint.sh
+
+ENTRYPOINT	["sh", "/tmp/entrypoint.sh"]
